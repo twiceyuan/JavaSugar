@@ -1,4 +1,4 @@
-package func;
+package com.twiceyuan.sugar.func;
 
 /**
  * Created by twiceYuan on 4/29/16.

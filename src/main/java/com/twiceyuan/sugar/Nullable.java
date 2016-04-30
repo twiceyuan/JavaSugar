@@ -1,4 +1,6 @@
-import func.Callback;
+package com.twiceyuan.sugar;
+
+import com.twiceyuan.sugar.func.Callback;
 
 /**
  * Created by twiceYuan on 4/29/16.

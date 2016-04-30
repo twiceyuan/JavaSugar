@@ -1,4 +1,6 @@
-import func.Callback;
+package com.twiceyuan.sugar;
+
+import com.twiceyuan.sugar.func.Callback;
 import org.junit.Test;
 
 import java.util.Arrays;

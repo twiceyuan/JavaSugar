@@ -1,4 +1,6 @@
-import func.Call;
+package com.twiceyuan.sugar;
+
+import com.twiceyuan.sugar.func.Call;
 
 import java.util.LinkedList;
 import java.util.List;
