@@ -51,6 +51,28 @@ IgnoredNull.of(() -> computer.getScreen().getInfo().getWidth()).ifPresent(width 
 
 只有这样吗？如果要考虑到为空的情况也要处理（大多数情况就是这样），那么第一种方法还要再加将近一倍的数量，或者增加一个方法；而第二种就是在 catch 里处理一次，非 catch 取到之后判断非空再一次。这样封装之后，在很多情况下我们不用打乱代码的层级结构就能取到深层次的对象或者值，就像 kotlin 或者 swift 中的 ? 操作符一样。
 
+### 3. CheckNull
 
+原理类似 IgnoredNull，也是避免复杂的多变量判空，回调一个 chekcer 使用其可变长度参数方法一次性传入所有需要判空、catch 空引用的变量统一处理其结果。
 
+### 4. Tug
 
+拔河任务模型。假设有多个任务 A（A1，A2，A3……），且所有任务 A 的完成时间先后不确定，但当所有 A 任务所有执行完毕后需马上执行任务 B。这种异步模型可以用 Tug 类简单解决：
+
+```java
+// 创建异步模型管理工具
+Tug tug = Tug.create();
+tug.addMember(member -> {
+   // 执行耗时操作
+   // ...
+   member.ready(); // 通知耗时操作完成
+}
+// 添加其他任务
+// tug.addMember...
+
+// 所有任务添加完毕
+tug.setAllReadyListener(() -> {
+  // 所有任务完成后的操作
+});
+tug.start(); // 开始监听
+```
