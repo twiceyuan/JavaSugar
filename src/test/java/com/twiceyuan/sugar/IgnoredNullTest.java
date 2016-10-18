@@ -8,7 +8,7 @@ import org.junit.Test;
  * 测试 IgnoredNull
  */
 @SuppressWarnings("Convert2MethodRef")
-public class NullableTest {
+public class IgnoredNullTest {
 
     @Test
     public void test() {

@@ -20,7 +20,7 @@ public class TaskValveTest {
         delayAddTask(500, valve, "步骤3");
         delayAddTask(1500, valve, "步骤4");
         delayAndRun(1000, () -> {
-            System.out.println("openValve at " + markTime());
+            System.out.println("openValve    at: " + markTime());
             valve.openValve();
         });
 
