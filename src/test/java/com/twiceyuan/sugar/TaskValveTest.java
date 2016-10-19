@@ -15,16 +15,17 @@ public class TaskValveTest {
     @Test
     public void test() {
         final TaskValve valve = TaskValve.create();
-        delayAddTask(1200, valve, "步骤1");
-        delayAddTask(800, valve, "步骤2");
-        delayAddTask(500, valve, "步骤3");
-        delayAddTask(1500, valve, "步骤4");
-        delayAndRun(1000, () -> {
-            System.out.println("openValve    at: " + markTime());
+
+        for (int i = 1; i <= 1000; i++) {
+            delayAddTask((long) (Math.random() * 5000), valve, "步骤" + i);
+        }
+
+        delayAndRun(2500, () -> {
+            System.out.println("---> \t阀门打开\t\t" + markTime());
             valve.openValve();
         });
 
-        sleep(3000);
+        sleep(5100);
     }
 
     private void delayAndRun(final long ms, final Runnable runnable) {
@@ -47,8 +48,8 @@ public class TaskValveTest {
     private void delayAddTask(final long ms, TaskValve valve, String taskName) {
         new Thread(() -> {
             sleep(ms);
-            System.out.println(taskName + " create at: " + markTime());
-            valve.addTask(() -> System.out.println(taskName + " run at   : " + markTime()));
+            System.out.println(taskName + "\t被创建\t\t" + markTime());
+            valve.addTask(() -> System.out.println(taskName + "\t被执行\t\t" + markTime()));
         }).start();
     }
 

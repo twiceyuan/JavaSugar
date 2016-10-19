@@ -13,11 +13,11 @@ public class TugTest {
     public void test() throws Exception {
         Tug tug = Tug.create();
 
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 50; i++) {
             System.out.printf("添加任务%d%n", i);
             final int index= i;
             tug.addMember(member -> new Thread(() -> {
-                sleep((long) (Math.random() * 30000));
+                sleep((long) (Math.random() * 5000));
                 System.out.printf("任务%d准备就绪%n", index);
                 member.ready();
             }).start());
@@ -27,7 +27,7 @@ public class TugTest {
         tug.start();
 
         // wait for task all finish
-        sleep(31000);
+        sleep(5100);
     }
 
     private void sleep(long timeMillis) {

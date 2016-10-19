@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * Created by twiceYuan on 18/10/2016.
+ *
+ * 转换器 usecase
  */
 public class ConverterTest {
 
