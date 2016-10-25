@@ -1,9 +1,7 @@
 package com.twiceyuan.sugar;
 
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Created by twiceYuan on 4/14/16.
@@ -14,8 +12,8 @@ import java.util.Vector;
  */
 public final class TaskValve {
 
-    private List<Runnable> mTaskQueue    = new Vector<>(); // 任务序列
-    private boolean        mIsBlockClose = false; // 阻塞是否关闭
+    private Map<Integer, List<Runnable>> mTaskQueue = new TreeMap<>(); // 任务序列
+    private boolean mIsBlockClose = false; // 阻塞是否关闭
 
     private final Object monitor = new Object();
 
@@ -34,10 +32,40 @@ public final class TaskValve {
     public void openValve() {
         synchronized (monitor) {
             mIsBlockClose = true; // 关闭阻塞
-            for (Runnable c : new LinkedList<>(mTaskQueue)) {
-                if (c != null) {
-                    c.run();
-                    mTaskQueue.remove(c);
+            Set<Integer> keys = mTaskQueue.keySet();
+            for (Integer key : keys) {
+                List<Runnable> runnableList = mTaskQueue.get(key);
+                if (runnableList != null && runnableList.size() > 0) {
+                    //noinspection Convert2streamapi
+                    for (Runnable runnable : runnableList) {
+                        runnable.run();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * addTask 中的 action 会在 openValve 方法执行过才会执行
+     *
+     * @param priority openValve 前加入的任务执行的优先级，对 openValve 之后的任务无效，默认为 100
+     * @param after    openValve 方法执行过需要执行的代码
+     */
+    public void addTask(int priority, Runnable after) {
+        synchronized (monitor) {
+            // 如果阻塞关闭，则至今执行任务，否则添加到缓存序列中
+            if (mIsBlockClose) {
+                if (after != null) {
+                    after.run();
+                }
+            } else {
+                List<Runnable> runnableList = mTaskQueue.get(priority);
+                if (runnableList == null) {
+                    runnableList = new ArrayList<>();
+                    runnableList.add(after);
+                    mTaskQueue.put(priority, runnableList);
+                } else {
+                    runnableList.add(after);
                 }
             }
         }
@@ -49,15 +77,6 @@ public final class TaskValve {
      * @param after openValve 方法执行过需要执行的代码
      */
     public void addTask(Runnable after) {
-        synchronized (monitor) {
-            // 如果阻塞关闭，则至今执行任务，否则添加到缓存序列中
-            if (mIsBlockClose) {
-                if (after != null) {
-                    after.run();
-                }
-            } else {
-                mTaskQueue.add(after);
-            }
-        }
+        addTask(100, after);
     }
 }
