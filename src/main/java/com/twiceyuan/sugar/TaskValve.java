@@ -5,9 +5,8 @@ import java.util.*;
 
 /**
  * Created by twiceYuan on 4/14/16.
- * Email: i@twiceyuan.com
- * Site: http://twiceyuan.com
- * <p/>
+ *
+ * <p>
  * 缓存需要先决条件才能执行的任务，等待条件满足后全部执行，线程无关
  */
 public final class TaskValve {
@@ -26,7 +25,7 @@ public final class TaskValve {
 
     /**
      * 执行所有缓存的任务并清空任务队列。
-     * <p/>
+     * <p>
      * 执行过该方法后，新添加的任务也会直接执行
      */
     public void openValve() {
