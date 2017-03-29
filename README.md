@@ -61,18 +61,18 @@ IgnoredNull.of(() -> computer.getScreen().getInfo().getWidth()).ifPresent(width 
 
 ```java
 // 创建异步模型管理工具
-Tug tug = Tug.create();
-tug.addMember(member -> {
+Tug tetris = Tug.create();
+tetris.addMember(member -> {
    // 执行耗时操作
    // ...
    member.ready(); // 通知耗时操作完成
 }
 // 添加其他任务
-// tug.addMember...
+// tetris.addMember...
 
 // 所有任务添加完毕
-tug.setAllReadyListener(() -> {
+tetris.setAllReadyListener(() -> {
   // 所有任务完成后的操作
 });
-tug.start(); // 开始监听
+tetris.start(); // 开始监听
 ```
