@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Created by twiceYuan on 18/10/2016.
- *
+ * <p>
  * CheckNull testcase
  */
 public class CheckNullTest {
@@ -15,40 +15,60 @@ public class CheckNullTest {
     @Test
     public void test() {
 
-        ComplexModel model1 = testModel1();
-        ComplexModel model2 = testModel2();
+        final ComplexModel model1 = testModel1();
+        final ComplexModel model2 = testModel2();
 
-        CheckNull.of(checker -> checker.check(model1.childModels.size(), model1.childModels.get(0).name))
-                .ifPresent(() -> {
-                    System.out.println();
-                    System.out.println("Model1");
-                    System.out.println(model1.childModels.size());
-                    System.out.println(model1.childModels.get(0).name);
-                    System.out.println();
-                    assert true;
+        CheckNull.of(new CheckNull.CheckerProvider() {
+            @Override
+            public CheckNull call(CheckNull.NullChecker checker) {
+                return checker.check(model1.childModels.size(), model1.childModels.get(0).name);
+            }
+        })
+                .ifPresent(new CheckNull.NotNullCallback() {
+                    @Override
+                    public void call() {
+                        System.out.println();
+                        System.out.println("Model1");
+                        System.out.println(model1.childModels.size());
+                        System.out.println(model1.childModels.get(0).name);
+                        System.out.println();
+                        assert true;
+                    }
                 })
-                .ifHasNull(() -> {
-                    System.out.println();
-                    System.out.println("Model1 is bad");
-                    System.out.println();
-                    assert false;
+                .ifHasNull(new CheckNull.HasNullCallback() {
+                    @Override
+                    public void call() {
+                        System.out.println();
+                        System.out.println("Model1 is bad");
+                        System.out.println();
+                        assert false;
+                    }
                 });
 
-        CheckNull.of(checker -> checker.check(model2.childModels.size(), model2.childModels.get(0).name))
-                .ifPresent(() -> {
-                    System.out.println();
-                    System.out.println("Model2");
-                    System.out.println(model2.childModels.size());
-                    System.out.println(model2.childModels.get(0).name);
-                    System.out.println();
-                    assert false;
-                })
-                .ifHasNull(() -> {
-                    System.out.println();
-                    System.out.println("Model2 is bad");
-                    System.out.println();
-                    assert true;
-                });
+        CheckNull.of(new CheckNull.CheckerProvider() {
+            @Override
+            public CheckNull call(CheckNull.NullChecker checker) {
+                return checker.check(model2.childModels.size(), model2.childModels.get(0).name);
+            }
+        }).ifPresent(new CheckNull.NotNullCallback() {
+            @Override
+            public void call() {
+                System.out.println();
+                System.out.println("Model2");
+                System.out.println(model2.childModels.size());
+                System.out.println(model2.childModels.get(0).name);
+                System.out.println();
+                assert false;
+            }
+        }).ifHasNull(new CheckNull.HasNullCallback() {
+            @Override
+            public void call() {
+                System.out.println();
+                System.out.println("Model2 is bad");
+                System.out.println();
+                assert true;
+            }
+        });
     }
 
     private ComplexModel testModel1() {

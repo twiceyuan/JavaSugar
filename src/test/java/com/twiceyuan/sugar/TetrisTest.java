@@ -16,14 +16,27 @@ public class TetrisTest {
         for (int i = 1; i <= 5; i++) {
             System.out.printf("添加任务%d%n", i);
             final int index= i;
-            tetris.addMember(member -> new Thread(() -> {
-                sleep((long) (Math.random() * 5000));
-                System.out.printf("任务%d准备就绪%n", index);
-                member.ready();
-            }).start());
+            tetris.addMember(new Tetris.MemberProvider() {
+                @Override
+                public void member(final Tetris.Member member) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            TetrisTest.this.sleep((long) (Math.random() * 5000));
+                            System.out.printf("任务%d准备就绪%n", index);
+                            member.ready();
+                        }
+                    }).start();
+                }
+            });
         }
 
-        tetris.setAllReadyListener(() -> System.out.println("所有任务准备就绪"));
+        tetris.setAllReadyListener(new Tetris.AllReadyListener() {
+            @Override
+            public void call() {
+                System.out.println("所有任务准备就绪");
+            }
+        });
         tetris.start();
 
         // wait for task all finish

@@ -23,19 +23,25 @@ public class TaskValveTest {
         // 较晚加入，较高的优先级
         delayAddTask(2490, valve, "步骤21", 0);
 
-        delayAndRun(2500, () -> {
-            System.out.println("---> \t阀门打开\t\t" + markTime());
-            valve.openValve();
+        delayAndRun(2500, new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("---> \t阀门打开\t\t" + TaskValveTest.this.markTime());
+                valve.openValve();
+            }
         });
 
         sleep(5100);
     }
 
     private void delayAndRun(final long ms, final Runnable runnable) {
-        new Thread(() -> {
-            sleep(ms);
-            if (runnable != null) {
-                runnable.run();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TaskValveTest.this.sleep(ms);
+                if (runnable != null) {
+                    runnable.run();
+                }
             }
         }).start();
     }
@@ -48,11 +54,19 @@ public class TaskValveTest {
         }
     }
 
-    private void delayAddTask(final long ms, TaskValve valve, String taskName, int priority) {
-        new Thread(() -> {
-            sleep(ms);
-            System.out.println(taskName + "\t被创建\t\t" + markTime());
-            valve.addTask(priority, () -> System.out.println(taskName + "\t被执行\t\t" + markTime()));
+    private void delayAddTask(final long ms, final TaskValve valve, final String taskName, final int priority) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TaskValveTest.this.sleep(ms);
+                System.out.println(taskName + "\t被创建\t\t" + TaskValveTest.this.markTime());
+                valve.addTask(priority, new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(taskName + "\t被执行\t\t" + TaskValveTest.this.markTime());
+                    }
+                });
+            }
         }).start();
     }
 

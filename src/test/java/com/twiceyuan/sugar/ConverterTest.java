@@ -15,7 +15,12 @@ public class ConverterTest {
     @Test
     public void test() throws Exception {
         List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
-        List<String> converted = Converter.convert(integers, i -> "姓名" + i);
+        List<String> converted = Converter.convert(integers, new Converter.ValueConverter<Integer, String>() {
+            @Override
+            public String convert(Integer i) {
+                return "姓名" + i;
+            }
+        });
         System.out.println(converted);
     }
 }

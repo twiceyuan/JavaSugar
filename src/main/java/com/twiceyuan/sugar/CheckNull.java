@@ -15,13 +15,16 @@ public class CheckNull {
 
     public static CheckNull of(CheckerProvider provider) {
         try {
-            return provider.call(object -> {
-                for (Object o : object) {
-                    if (o == null) {
-                        return new CheckNull(false);
+            return provider.call(new NullChecker() {
+                @Override
+                public CheckNull check(Object... object) {
+                    for (Object o : object) {
+                        if (o == null) {
+                            return new CheckNull(false);
+                        }
                     }
+                    return new CheckNull(true);
                 }
-                return new CheckNull(true);
             });
         } catch (Exception e) {
             return new CheckNull(false);

@@ -12,22 +12,44 @@ public class IgnoredNullTest {
 
     @Test
     public void test() {
-        String testString = "I'm a bug!";
+        final String testString = "I'm a bug!";
 
-        IgnoredNull.of(() -> buildValue(testString).body.body.body).ifPresent((message) -> {
-            // 检测所有引用非空, 且值不为空
-            System.out.println(message);
-        }).ifNull(() -> {
-            // 该值为空或引用为空
-            System.out.println("该值为空或引用为空");
+        IgnoredNull.of(new IgnoredNull.ValueProvider<Object>() {
+            @Override
+            public Object provide() {
+                return IgnoredNullTest.this.buildValue(testString).body.body.body;
+            }
+        }).ifPresent(new IgnoredNull.ValueCallback<Object>() {
+            @Override
+            public void call(Object message) {
+                // 检测所有引用非空, 且值不为空
+                System.out.println(message);
+            }
+        }).ifNull(new IgnoredNull.NullCallback() {
+            @Override
+            public void onNull() {
+                // 该值为空或引用为空
+                System.out.println("该值为空或引用为空");
+            }
         });
 
-        IgnoredNull.of(() -> buildBug(testString).body.body.body).ifPresent((message) -> {
-            // 检测所有引用非空, 且值不为空
-            System.out.println(message);
-        }).ifNull(() -> {
-            // 该值为空或引用为空
-            System.out.println("该值为空或引用为空");
+        IgnoredNull.of(new IgnoredNull.ValueProvider<Object>() {
+            @Override
+            public Object provide() {
+                return IgnoredNullTest.this.buildBug(testString).body.body.body;
+            }
+        }).ifPresent(new IgnoredNull.ValueCallback<Object>() {
+            @Override
+            public void call(Object message) {
+                // 检测所有引用非空, 且值不为空
+                System.out.println(message);
+            }
+        }).ifNull(new IgnoredNull.NullCallback() {
+            @Override
+            public void onNull() {
+                // 该值为空或引用为空
+                System.out.println("该值为空或引用为空");
+            }
         });
     }
 
