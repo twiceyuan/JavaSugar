@@ -1,7 +1,5 @@
 package com.twiceyuan.sugar;
 
-import com.sun.istack.internal.NotNull;
-
 /**
  * Created by twiceYuan on 27/09/2016.
  * <p>
@@ -20,7 +18,7 @@ public class IgnoredNull<T> {
      * @param <T>      该值的类型
      * @return 该值的 IgnoredNull 对象
      */
-    public static <T> IgnoredNull<T> of(@NotNull ValueProvider<T> provider) {
+    public static <T> IgnoredNull<T> of(ValueProvider<T> provider) {
         try {
             return new IgnoredNull<>(provider.provide());
         } catch (NullPointerException e) {
@@ -32,14 +30,14 @@ public class IgnoredNull<T> {
         mCacheValue = t;
     }
 
-    public IgnoredNull<T> ifPresent(@NotNull ValueCallback<T> callback) {
+    public IgnoredNull<T> ifPresent(ValueCallback<T> callback) {
         if (mCacheValue != null) {
             callback.call(mCacheValue);
         }
         return this;
     }
 
-    public IgnoredNull<T> ifNull(@NotNull NullCallback callback) {
+    public IgnoredNull<T> ifNull(NullCallback callback) {
         if (mCacheValue == null) {
             callback.onNull();
         }
